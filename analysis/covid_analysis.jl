@@ -22,34 +22,19 @@ function load_covid_data(path::String = PATHS.csv_covid)::DataFrame
         error("Файл данных не найден: $path")
     end
 
-    df = CSV.read(path, DataFrame, dateformat = "yyyy-mm-dd")
-    rename!(df, lowercase.(names(df)))  # унификация имён колонок
+    df = CSV.read(path, DataFrame, dateformat = "yyyy-mm-dd", missingstring = "MD")
 
-    # Парсинг дат
-    df[!, :дата] = Date.(df[!, :дата], dateformat"yyyy-mm-dd")
-
-    # Преобразование строковых "MD" → missing, а числа → Float64
-    for col in names(df)
-        if col == :дата
-            continue
-        end
-        df[!, col] = allowmissing(df[!, col])
-        for i in 1:nrow(df)
-            val = df[i, col]
-            if val isa AbstractString && val == "MD"
-                df[i, col] = missing
-            elseif val isa AbstractString
-                try
-                    df[i, col] = parse(Float64, val)
-                catch
-                    df[i, col] = missing
-                end
-            end
-        end
-    end
+    # Переименование колонок в удобные символы
+    rename!(df, Dict(
+        "Дата"            => :дата,
+        "Всего (накоп.)"  => :всего_накоп,
+        "За сутки"        => :за_сутки,
+        "Летальных всего" => :летальных_всего,
+        "Летальных за сутки" => :летальных_за_сутки,
+    ))
 
     n_total = nrow(df)
-    n_valid = count(.!ismissing.(df[!, :всего_накоп_]))
+    n_valid = count(.!ismissing.(df[!, :всего_накоп]))
     @info "COVID данные загружены: $n_total строк, $n_valid с данными"
 
     return df
@@ -65,23 +50,16 @@ end
 """
 function compute_metrics(df::DataFrame)::DataFrame
     out = copy(df)
+    out[!, :за_сутки_ma7] = Vector{Union{Missing, Float64}}(missing, nrow(out))
 
-    # Скользящее среднее (7 дней) для "за сутки"
-    col_daily = :за_сутки
-    col_smooth = :за_сутки_ma7
-
-    out[!, col_smooth] = allowmissing(out[!, col_smooth])
-
-    daily_vals = out[!, col_daily]
+    daily_vals = out[!, :за_сутки]
     n = length(daily_vals)
 
     for i in 1:n
         window_start = max(1, i - 6)
         window = [daily_vals[j] for j in window_start:i if !ismissing(daily_vals[j])]
         if !isempty(window)
-            out[i, col_smooth] = mean(window)
-        else
-            out[i, col_smooth] = missing
+            out[i, :за_сутки_ma7] = mean(window)
         end
     end
 
@@ -98,7 +76,7 @@ end
 Агрегация данных по месяцам.
 """
 function aggregate_monthly(df::DataFrame)::DataFrame
-    df_clean = dropmissing(df, :всего_накоп_)
+    df_clean = dropmissing(df, :всего_накоп)
     df_clean[!, :год] = year.(df_clean[!, :дата])
     df_clean[!, :месяц] = month.(df_clean[!, :дата])
 
@@ -151,7 +129,7 @@ function print_summary(df::DataFrame)
         println("    Максимум: $(maximum(deaths_vec))")
     end
 
-    last_total = df[end, :всего_накоп_]
+    last_total = df[end, :всего_накоп]
     if !ismissing(last_total)
         println("\n  Итого заболевших (накоп.): $(round(Int, last_total))")
     end
@@ -165,4 +143,42 @@ function print_summary(df::DataFrame)
 
     println("=" ^ 70, "\n")
     return nothing
+end
+
+# ============================================================
+# ПЕРЕВОД КОЛОНОК
+# ============================================================
+"""
+    translate_columns!(df::DataFrame)::DataFrame
+
+Заменяет русские названия колонок на простые английские эквиваленты.
+"""
+function translate_columns!(df::DataFrame)::DataFrame
+    RU_TO_EN = Dict(
+        :дата              => :date,
+        :всего_накоп       => :total,
+        :за_сутки          => :daily,
+        :летальных_всего   => :deaths_total,
+        :летальных_за_сутки => :deaths_daily,
+        :за_сутки_ma7      => :daily_ma7,
+        :год               => :year,
+        :месяц             => :month,
+        :за_месяц          => :monthly,
+        :летальных_за_месяц => :deaths_monthly,
+    )
+
+    renames = Dict{Symbol, Symbol}()
+    for col in names(df)
+        sym = Symbol(col)
+        if haskey(RU_TO_EN, sym)
+            renames[sym] = RU_TO_EN[sym]
+        end
+    end
+
+    if !isempty(renames)
+        rename!(df, renames)
+        @info "Переименованы колонки: $(collect(keys(renames))) → $(collect(values(renames)))"
+    end
+
+    return df
 end

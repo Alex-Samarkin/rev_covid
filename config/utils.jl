@@ -47,7 +47,8 @@ function setup_project()
         @info "Папка создана: $dir_path"
     end
 
-    for (name, path) in (; :covid => PATHS.csv_covid, :vp => PATHS.csv_vp)
+    csv_files = Dict("covid" => PATHS.csv_covid, "vp" => PATHS.csv_vp)
+    for (name, path) in csv_files
         if isfile(path)
             @info "Найден файл данных: $name → $path"
         else
@@ -69,10 +70,8 @@ end
 function apply_theme!(p::Plots.Plot)
     default(
         fontfamily = PLOT_CFG.font,
-        fontsize   = PLOT_CFG.fontsize,
         linewidth  = PLOT_CFG.linewidth,
         markersize = PLOT_CFG.marker_size,
-        dpi        = PLOT_CFG.dpi,
     )
     return p
 end
@@ -80,15 +79,21 @@ end
 """
     save_figure(p::Plots.Plot, basename::String; dir = PATHS.figures_covid)
 
-Сохраняет график в PNG и SVG с высоким разрешением.
+Сохраняет график в PNG (через png) и SVG (через savefig) с высоким разрешением.
 """
 function save_figure(p::Plots.Plot, basename::String; dir = PATHS.figures_covid)
     mkpath(dir)
-    for fmt in PLOT_CFG.formats
-        out_path = joinpath(dir, "$basename.$fmt")
-        savefig(p, out_path)
-        @info "Сохранён график: $out_path"
-    end
+
+    # PNG — явный вызов для надёжного рендеринга на Windows/GR
+    png_path = joinpath(dir, "$basename.png")
+    png(p, png_path)
+    @info "Сохранён график: $png_path"
+
+    # SVG — savefig работает корректно
+    svg_path = joinpath(dir, "$basename.svg")
+    savefig(p, svg_path)
+    @info "Сохранён график: $svg_path"
+
     return nothing
 end
 
@@ -127,16 +132,14 @@ function set_gr_backend!()
     gr()
     default(
         fontfamily = PLOT_CFG.font,
-        fontsize   = PLOT_CFG.fontsize,
         linewidth  = PLOT_CFG.linewidth,
         markersize = PLOT_CFG.marker_size,
-        dpi        = PLOT_CFG.dpi,
         size       = PLOT_CFG.size,
         legend     = :topleft,
         grid       = true,
         gridalpha  = 0.3,
         framestyle = :semi,
     )
-    @info "GR бэкенд настроен: dpi=$(PLOT_CFG.dpi), size=$(PLOT_CFG.size), font=$(PLOT_CFG.font)"
+    @info "GR бэкенд настроен: size=$(PLOT_CFG.size), font=$(PLOT_CFG.font)"
     return nothing
 end
