@@ -174,7 +174,7 @@ rename!(df, :total_interp_diff => :daily_interp)
 
 # Окно сглаживания для daily_interp
 using Statistics, StatsBase
-window_size = 14
+window_size = 18
 df.daily_interp_smooth = [mean(skipmissing(df.daily_interp[max(1, i-window_size+1):i])) for i in 1:nrow(df)]    
 
 # 2. Совмещённый график: date vs daily и total_interp_diff
