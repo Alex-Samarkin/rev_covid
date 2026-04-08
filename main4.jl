@@ -281,3 +281,41 @@ display(p7)
 savefig(p7, "./figures/covid/daily_cases_with_strain_annotations.png")
 savefig(p7, "./figures/covid/daily_cases_with_strain_annotations.svg")
 println("Daily cases plot with strain annotations saved successfully.")
+
+#========================================================================#
+# Создай таблицу с именами полей и комментариями по каждому полю, чтобы было понятно, что за данные в каждом столбце
+# Сохрани ее как html или csv файл для удобства просмотра
+field_descriptions = DataFrame(
+    field_name = String[],
+    description = String[]
+)
+push!(field_descriptions, ("date", "Дата наблюдения"))
+push!(field_descriptions, ("daily_interp_smooth", "Сглаженное ежедневное количество случаев"))
+push!(field_descriptions, ("strain_id", "Уникальный идентификатор штамма"))
+push!(field_descriptions, ("strain_num", "Номер штамма (для сортировки)"))
+push!(field_descriptions, ("strain_name", "Название штамма"))
+push!(field_descriptions, ("pango_lineage", "Pango линия штамма"))
+push!(field_descriptions, ("strain_dom_start", "Начало доминирующего периода штамма"))
+push!(field_descriptions, ("strain_dom_end", "Окончание доминирующего периода штамма"))
+push!(field_descriptions, ("R0_min", "Минимальное значение R0"))
+push!(field_descriptions, ("R0_avg", "Среднее значение R0"))
+push!(field_descriptions, ("R0_max", "Максимальное значение R0"))
+push!(field_descriptions, ("T_incub_avg_days", "Среднее время инкубации (дни)"))
+push!(field_descriptions, ("sigma_avg_per_day", "Средняя скорость восстановления (в день)"))
+push!(field_descriptions, ("T_infect_avg_days", "Среднее время заражения (дни)"))
+push!(field_descriptions, ("gamma_avg_per_day", "Средняя скорость выздоровления (в день)"))
+push!(field_descriptions, ("IFR_avg", "Средняя смертность от инфекции"))
+push!(field_descriptions, ("mu_avg_per_day", "Средняя скорость смерти (в день)"))
+push!(field_descriptions, ("beta_min_per_day", "Минимальная скорость передачи (в день)"))
+push!(field_descriptions, ("beta_avg_per_day", "Средняя скорость передачи (в день)"))
+push!(field_descriptions, ("beta_max_per_day", "Максимальная скорость передачи (в день)"))
+push!(field_descriptions, ("T_gen_avg_days", "Среднее время генерации (дни)"))
+push!(field_descriptions, ("severity", "Степень тяжести болезни"))
+push!(field_descriptions, ("immune_escape", "Способность штамма избегать иммунного ответа"))
+push!(field_descriptions, ("n_matching_strains", "Количество совпадающих штаммов"))
+push!(field_descriptions, ("strain_match_type", "Тип совпадения штаммов"))
+
+# Сохраняем таблицу описаний полей
+CSV.write("./data_out/field_descriptions.csv", field_descriptions)
+println("Field descriptions saved successfully.")
+#========================================================================#
