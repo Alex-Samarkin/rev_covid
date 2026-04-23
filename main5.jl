@@ -1,4 +1,4 @@
-using JLD2, CSV, DataFrames, Dates, Plots, Peaks
+using Revise, JLD2, CSV, DataFrames, Dates, Plots, Peaks
 using DataFrames, SavitzkyGolay, DSP,LinearAlgebra
 using Printf
 
