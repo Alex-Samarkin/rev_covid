@@ -1,0 +1,40 @@
+```mermaid
+flowchart TB
+    subgraph row1[" "]
+        direction LR
+        A[Excel: ВП-формы + COVID-сводки 2020-2024]
+        B[Python: разбор заголовков, нормализация]
+        C[Julia: кубическая сплайн-интерполяция<br/>гауссово сглаживание sigma=15 дней]
+        D{Идентификация волн<br/>по знаку производной}
+    end
+
+    subgraph row2[" "]
+        direction LR
+        E[10 волн + привязка к штаммам<br/>sigma_k, gamma_k из covid19_seird_params.csv]
+        F[Аналитическое предобусловливание<br/>beta из скорости роста, N_eff из R0]
+        G[20x20 сеточный поиск<br/>beta x N_eff]
+        H[NelderMead x 15 стартов]
+    end
+
+    subgraph row3[" "]
+        direction LR
+        I[L-BFGS полировка]
+        J{Целочисленная SEIRD<br/>5 параметров<br/>theta = beta mu E0 I0 N_eff}
+        K{Дробная SEIRD GL<br/>6 параметров<br/>+ alpha_k через logit}
+        L[LRT / AIC / BIC<br/>Bonferroni x 10 волн]
+    end
+
+    subgraph row4[" "]
+        direction LR
+        M[Интерпретация alpha_k<br/>как маркера иммунной памяти]
+    end
+
+    A --> B --> C --> D
+    D --> E --> F --> G --> H
+    H --> I
+    I --> J
+    I --> K
+    J --> L
+    K --> L
+    L --> M
+```

@@ -1,0 +1,297 @@
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="1" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ЗАГОЛОВОК
+    ═══════════════════════════════════════════════════════════════ -->
+    <mxCell id="title" value="Трёхступенчатая стратегия численной оптимизации (калибровка волны k)" 
+      style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1a1a2e;" 
+      vertex="1" parent="1">
+      <mxGeometry x="60" y="30" width="1530" height="40" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ВХОДНЫЕ ДАННЫЕ
+    ═══════════════════════════════════════════════════════════════ -->
+    <mxCell id="input" value="&lt;b&gt;Входные данные волны k&lt;/b&gt;&lt;br/&gt;obs_cases[1..T], obs_deaths[1..T]&lt;br/&gt;σ_k, γ_k (фиксированы из штаммов)&lt;br/&gt;μ_prior, β_prior (стартовые ориентиры)" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontColor=#1a1a2e;arcSize=12;align=center;verticalAlign=middle;" 
+      vertex="1" parent="1">
+      <mxGeometry x="60" y="110" width="240" height="100" as="geometry" />
+    </mxCell>
+
+    <!-- стрелка: Input → Step 1 -->
+    <mxCell id="arrow_in_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#1a1a2e;strokeWidth=2;endArrow=block;endFill=1;" 
+      edge="1" source="input" target="step1_box" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ШАГ 1 — АНАЛИТИЧЕСКОЕ ПРЕДОБУСЛОВЛИВАНИЕ
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- шапка -->
+    <mxCell id="step1_header" value="ШАГ 1" 
+      style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#ffffff;" 
+      vertex="1" parent="1">
+      <mxGeometry x="350" y="70" width="240" height="24" as="geometry" />
+    </mxCell>
+
+    <!-- фоновый блок -->
+    <mxCell id="step1_bg" value="" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16213e;strokeColor=#0f3460;arcSize=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="340" y="65" width="260" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- основной блок -->
+    <mxCell id="step1_box" value="&lt;b&gt;Аналитическое предобусловливание&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;① Оценка r&lt;sub&gt;est&lt;/sub&gt; из лог-линейной регрессии&lt;br/&gt;    ранней фазы роста (МНК)&lt;br/&gt;&lt;br/&gt;② β₀ = (r&lt;sub&gt;est&lt;/sub&gt; + σ)(r&lt;sub&gt;est&lt;/sub&gt; + γ + μ) / σ&lt;br/&gt;&lt;br/&gt;③ N&lt;sub&gt;eff,0&lt;/sub&gt; = C&lt;sub&gt;peak&lt;/sub&gt; · R₀ / (R₀ − 1)&lt;br/&gt;&lt;br/&gt;④ I₀ ← обратная экстраполяция от пика&lt;br/&gt;   E₀ = I₀ · (γ + μ) / σ" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4fd;strokeColor=#0f3460;fontSize=10;fontColor=#1a1a2e;arcSize=8;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=6;spacingTop=4;spacingBottom=4;" 
+      vertex="1" parent="1">
+      <mxGeometry x="340" y="95" width="260" height="200" as="geometry" />
+    </mxCell>
+
+    <!-- нижний тег: стоимость -->
+    <mxCell id="step1_cost" value="📊 ~1 вызов решателя (линейная аппроксимация)" 
+      style="text;html=1;strokeColor=#0f3460;fillColor=#c8e6f5;align=center;verticalAlign=middle;fontSize=9;rounded=1;fontColor=#0f3460;" 
+      vertex="1" parent="1">
+      <mxGeometry x="340" y="305" width="260" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- выход шага 1 -->
+    <mxCell id="step1_out" value="θ₀ = (β₀, μ₀, E₀, I₀, N&lt;sub&gt;eff,0&lt;/sub&gt;)" 
+      style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=1;fontColor=#1a1a2e;" 
+      vertex="1" parent="1">
+      <mxGeometry x="362" y="345" width="216" height="44" as="geometry" />
+    </mxCell>
+
+    <!-- стрелка внутри шага 1 -->
+    <mxCell id="a1_out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#0f3460;strokeWidth=1.5;endArrow=block;endFill=1;" 
+      edge="1" source="step1_box" target="step1_out" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- стрелка Step 1 → Step 2 -->
+    <mxCell id="arrow_1_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#1a1a2e;strokeWidth=2;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" 
+      edge="1" source="step1_out" target="step2_box" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ШАГ 2 — СЕТОЧНЫЙ ПОИСК
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <mxCell id="step2_bg" value="" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16213e;strokeColor=#533483;arcSize=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="660" y="65" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="step2_header" value="ШАГ 2" 
+      style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#ffffff;" 
+      vertex="1" parent="1">
+      <mxGeometry x="670" y="70" width="240" height="24" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step2_box" value="&lt;b&gt;Двумерный сеточный поиск&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Сетка: β ∈ [β₀/4, 4β₀], 20 точек (лог.)&lt;br/&gt;       N&lt;sub&gt;eff&lt;/sub&gt; ∈ [1.5·C&lt;sub&gt;total&lt;/sub&gt;, N&lt;sub&gt;city&lt;/sub&gt;], 20 точек&lt;br/&gt;&lt;br/&gt;На каждом из 400 узлов:&lt;br/&gt;  μ = μ&lt;sub&gt;prior&lt;/sub&gt; (фиксировано)&lt;br/&gt;  E₀, I₀ ← аналитически из текущих β, N&lt;sub&gt;eff&lt;/sub&gt;&lt;br/&gt;  L(θ) = log-MSE (вызов решателя)&lt;br/&gt;&lt;br/&gt;→ Выбор узла с min L" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8fd;strokeColor=#533483;fontSize=10;fontColor=#1a1a2e;arcSize=8;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="660" y="95" width="260" height="200" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step2_cost" value="📊 400 вызовов решателя (полный перебор сетки)" 
+      style="text;html=1;strokeColor=#533483;fillColor=#e8d5f5;align=center;verticalAlign=middle;fontSize=9;rounded=1;fontColor=#533483;" 
+      vertex="1" parent="1">
+      <mxGeometry x="660" y="305" width="260" height="26" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step2_out" value="θ&lt;sub&gt;grid&lt;/sub&gt; — лучший узел сетки" 
+      style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=1;fontColor=#1a1a2e;" 
+      vertex="1" parent="1">
+      <mxGeometry x="682" y="345" width="216" height="44" as="geometry" />
+    </mxCell>
+
+    <mxCell id="a2_out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#533483;strokeWidth=1.5;endArrow=block;endFill=1;" 
+      edge="1" source="step2_box" target="step2_out" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <mxCell id="arrow_2_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#1a1a2e;strokeWidth=2;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" 
+      edge="1" source="step2_out" target="step3_box" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ШАГ 3 — NELDER-MEAD × 15 СТАРТОВ
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <mxCell id="step3_bg" value="" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16213e;strokeColor=#e94560;arcSize=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="980" y="65" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="step3_header" value="ШАГ 3" 
+      style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#ffffff;" 
+      vertex="1" parent="1">
+      <mxGeometry x="990" y="70" width="240" height="24" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step3_box" value="&lt;b&gt;Метод Нелдера–Мида (мультистарт)&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;15 независимых стартов:&lt;br/&gt;  • 1 старт из θ&lt;sub&gt;grid&lt;/sub&gt;&lt;br/&gt;  • 14 стартов: θ&lt;sub&gt;grid&lt;/sub&gt; + ε&lt;sub&gt;i&lt;/sub&gt; (Гауссов шум)&lt;br/&gt;    σ&lt;sub&gt;β&lt;/sub&gt;=0.3, σ&lt;sub&gt;μ&lt;/sub&gt;=0.8, σ&lt;sub&gt;E,I&lt;/sub&gt;=1.0, σ&lt;sub&gt;N&lt;/sub&gt;=0.4&lt;br/&gt;&lt;br/&gt;Каждый прогон: до 6 000 итераций&lt;br/&gt;Допуск: gtol = 10⁻⁸&lt;br/&gt;Seed = BASE_SEED + k (воспроизводимость)&lt;br/&gt;&lt;br/&gt;→ Отбор 3 лучших кандидатов по min L" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde8ec;strokeColor=#e94560;fontSize=10;fontColor=#1a1a2e;arcSize=8;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="980" y="95" width="260" height="200" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step3_cost" value="📊 ≤ 90 000 вызовов решателя (15 × 6 000 итер.)" 
+      style="text;html=1;strokeColor=#e94560;fillColor=#fcd0d8;align=center;verticalAlign=middle;fontSize=9;rounded=1;fontColor=#e94560;" 
+      vertex="1" parent="1">
+      <mxGeometry x="980" y="305" width="260" height="26" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step3_out" value="3 кандидата: θ&lt;sub&gt;c1&lt;/sub&gt;, θ&lt;sub&gt;c2&lt;/sub&gt;, θ&lt;sub&gt;c3&lt;/sub&gt;" 
+      style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=1;fontColor=#1a1a2e;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1002" y="345" width="216" height="44" as="geometry" />
+    </mxCell>
+
+    <mxCell id="a3_out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#e94560;strokeWidth=1.5;endArrow=block;endFill=1;" 
+      edge="1" source="step3_box" target="step3_out" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <mxCell id="arrow_3_4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#1a1a2e;strokeWidth=2;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" 
+      edge="1" source="step3_out" target="step4_box" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ШАГ 4 — L-BFGS
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <mxCell id="step4_bg" value="" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#16213e;strokeColor=#2d9966;arcSize=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1300" y="65" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="step4_header" value="ШАГ 4" 
+      style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#ffffff;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1310" y="70" width="240" height="24" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step4_box" value="&lt;b&gt;Квазиньютоновская полировка (L-BFGS)&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;3 независимых прогона L-BFGS&lt;br/&gt;(по одному от каждого кандидата)&lt;br/&gt;&lt;br/&gt;До 10 000 итераций на прогон&lt;br/&gt;Допуск: gtol = 10⁻¹⁰&lt;br/&gt;Численный градиент (конечные разности)&lt;br/&gt;&lt;br/&gt;Низкоранговое приближение гессиана&lt;br/&gt;→ суперлинейная сходимость&lt;br/&gt;&lt;br/&gt;→ Выбор θ* с глобальным min L" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5ed;strokeColor=#2d9966;fontSize=10;fontColor=#1a1a2e;arcSize=8;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=6;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1300" y="95" width="260" height="200" as="geometry" />
+    </mxCell>
+
+    <mxCell id="step4_cost" value="📊 ≤ 30 000 вызовов решателя (3 × 10 000 итер.)" 
+      style="text;html=1;strokeColor=#2d9966;fillColor=#c8f0d8;align=center;verticalAlign=middle;fontSize=9;rounded=1;fontColor=#2d9966;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1300" y="305" width="260" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- финальный результат -->
+    <mxCell id="step4_out" value="θ* = (β*, μ*, E₀*, I₀*, N*&lt;sub&gt;eff&lt;/sub&gt;[, α*&lt;sub&gt;k&lt;/sub&gt;])" 
+      style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#2d9966;fontSize=11;fontStyle=1;fontColor=#1a1a2e;strokeWidth=2;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1322" y="345" width="216" height="44" as="geometry" />
+    </mxCell>
+
+    <mxCell id="a4_out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#2d9966;strokeWidth=1.5;endArrow=block;endFill=1;" 
+      edge="1" source="step4_box" target="step4_out" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ВЫХОДНОЙ БЛОК
+    ═══════════════════════════════════════════════════════════════ -->
+    <mxCell id="output" value="&lt;b&gt;Выход: параметры волны k&lt;/b&gt;&lt;br/&gt;AIC, BIC, RMSE, R², MAPE&lt;br/&gt;LRT: Λ, p-value&lt;br/&gt;Запись в seird_all_waves_params.csv&lt;br/&gt;и fseird_params.csv" 
+      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#2d9966;fontSize=11;fontColor=#1a1a2e;arcSize=12;strokeWidth=2;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1350" y="430" width="210" height="110" as="geometry" />
+    </mxCell>
+
+    <mxCell id="arrow_out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#2d9966;strokeWidth=2;endArrow=block;endFill=1;" 
+      edge="1" source="step4_out" target="output" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         СТРЕЛКА ОБРАТНОЙ СВЯЗИ: следующая волна
+    ═══════════════════════════════════════════════════════════════ -->
+    <mxCell id="feedback_label" value="k → k+1 : следующая волна" 
+      style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontStyle=2;fontColor=#8b0000;" 
+      vertex="1" parent="1">
+      <mxGeometry x="580" y="570" width="540" height="24" as="geometry" />
+    </mxCell>
+
+    <!-- обратная стрелка: output → input (через низ) -->
+    <mxCell id="feedback_arrow" 
+      style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;
+             exitX=0.5;exitY=1;exitDx=0;exitDy=0;
+             entryX=0.5;entryY=1;entryDx=0;entryDy=0;
+             strokeColor=#8b0000;strokeWidth=2;dashed=1;dashPattern=8 4;
+             endArrow=block;endFill=1;endSize=8;
+             startArrow=none;" 
+      edge="1" source="output" target="input" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1455" y="600" />
+          <mxPoint x="180" y="600" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         НИЖНЯЯ ИТОГОВАЯ СТРОКА — суммарная стоимость
+    ═══════════════════════════════════════════════════════════════ -->
+    <mxCell id="total_cost" value="⚡ Суммарно на одну волну: ~120 500 вызовов решателя (400 + 90 000 + 30 000 + 100 предобусловливание)" 
+      style="text;html=1;strokeColor=#888888;fillColor=#f5f5f5;align=center;verticalAlign=middle;fontSize=10;rounded=1;fontColor=#444444;strokeWidth=1;" 
+      vertex="1" parent="1">
+      <mxGeometry x="340" y="640" width="1220" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ДРОБНАЯ МОДЕЛЬ — примечание
+    ═══════════════════════════════════════════════════════════════ -->
+    <mxCell id="frac_note" value="&lt;b&gt;Дробная модель (main8):&lt;/b&gt; идентичный конвейер + α&lt;sub&gt;k&lt;/sub&gt; через logit-преобразование φ = logit((α−0.5)/0.5)" 
+      style="text;html=1;strokeColor=#533483;fillColor=#f3e8fd;align=left;verticalAlign=middle;fontSize=10;rounded=1;fontColor=#533483;spacingLeft=8;" 
+      vertex="1" parent="1">
+      <mxGeometry x="340" y="680" width="1220" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         РАЗДЕЛИТЕЛИ / НУМЕРАЦИЯ ШАГОВ (цветные полосы сверху)
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Шаг 1 — синяя метка -->
+    <mxCell id="lbl1" value="① Предобусловливание" 
+      style="text;html=1;strokeColor=none;fillColor=#0f3460;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;fontColor=#ffffff;rounded=1;" 
+      vertex="1" parent="1">
+      <mxGeometry x="340" y="40" width="260" height="20" as="geometry" />
+    </mxCell>
+
+    <!-- Шаг 2 — фиолетовая метка -->
+    <mxCell id="lbl2" value="② Сеточный поиск 20×20" 
+      style="text;html=1;strokeColor=none;fillColor=#533483;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;fontColor=#ffffff;rounded=1;" 
+      vertex="1" parent="1">
+      <mxGeometry x="660" y="40" width="260" height="20" as="geometry" />
+    </mxCell>
+
+    <!-- Шаг 3 — красная метка -->
+    <mxCell id="lbl3" value="③ NelderMead × 15 стартов" 
+      style="text;html=1;strokeColor=none;fillColor=#e94560;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;fontColor=#ffffff;rounded=1;" 
+      vertex="1" parent="1">
+      <mxGeometry x="980" y="40" width="260" height="20" as="geometry" />
+    </mxCell>
+
+    <!-- Шаг 4 — зелёная метка -->
+    <mxCell id="lbl4" value="④ L-BFGS (полировка)" 
+      style="text;html=1;strokeColor=none;fillColor=#2d9966;align=center;verticalAlign=middle;fontSize=9;fontStyle=1;fontColor=#ffffff;rounded=1;" 
+      vertex="1" parent="1">
+      <mxGeometry x="1300" y="40" width="260" height="20" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>
