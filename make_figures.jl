@@ -99,6 +99,7 @@ function fig2_wave_profiles()
     # p = plot(vcat(plots_lin, plots_log)..., layout=(4,5), size=(1600,800), dpi=200)
     
     savefig(p, "fig2_wave_profiles.pdf")
+    savefig(p, "fig2_wave_profiles.png")
     @info "Рисунок 2 сохранён"
     return p
 end
@@ -132,6 +133,7 @@ function fig3_R0_comparison()
     hline!(p, [1.0], color=:red, ls=:dash, lw=1, label="R₀ = 1")
     
     savefig(p, "fig3_R0_comparison.pdf")
+    savefig(p, "fig3_R0_comparison.png")
     @info "Рисунок 3 сохранён"
     return p
 end
@@ -185,6 +187,7 @@ function fig4_alpha_dynamics()
     end
     
     savefig(p, "fig4_alpha_dynamics.pdf")
+    savefig(p, "fig4_alpha_dynamics.png")
     @info "Рисунок 4 сохранён"
     return p
 end
@@ -221,6 +224,7 @@ function fig5_trajectories_contrast()
     
     p = plot(p1, p2, layout=(1,2), size=(1100, 400), dpi=300, margin=5Plots.mm)
     savefig(p, "fig5_trajectories_contrast.pdf")
+    savefig(p, "fig5_trajectories_contrast.png")
     @info "Рисунок 5 сохранён"
     return p
 end
@@ -256,6 +260,7 @@ function fig6_gl_memory_kernels()
     vline!(p, [30], color=:gray50, ls=:dot, lw=1.5, label="30 дней")
     
     savefig(p, "fig6_gl_kernels.pdf")
+    savefig(p, "fig6_gl_kernels.png")
     @info "Рисунок 6 сохранён"
     return p
 end
@@ -298,6 +303,7 @@ function fig7_aic_bic()
     end
     
     savefig(p, "fig7_aic_bic.pdf")
+    savefig(p, "fig7_aic_bic.png")
     @info "Рисунок 7 сохранён"
     return p
 end
@@ -324,6 +330,7 @@ function figE_neff_dynamics()
               text("← Иммунный\n   уклон BA.1", 7, :center, :purple))
     
     savefig(p, "figE_neff.pdf")
+    savefig(p, "figE_neff.png")
     @info "Рисунок E сохранён"
     return p
 end
@@ -360,6 +367,7 @@ function figB_all_fits()
     p = plot(subplots..., layout=(2, 5), size=(1800, 700), dpi=150, 
              margin=2Plots.mm)
     savefig(p, "figB_all_fits.pdf")
+    savefig(p, "figB_all_fits.png")
     @info "Рисунок B (все волны) сохранён"
     return p
 end
