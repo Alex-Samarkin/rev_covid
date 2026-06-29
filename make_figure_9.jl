@@ -98,10 +98,10 @@ pA = plot(x_A_fit, ŷ_A,
           title  = "(А)",
           xlims  = (minimum(x_A_fit), maximum(x_A_fit)),
           ylims  = (0.68, 1.06),
-          legend = :topright,
+          legend = :none,
           dpi = 300, size = (380, 380),
           framestyle = :box,
-          tickfontsize = 9, labelfontsize = 10, titlefontsize = 11)
+          tickfontsize = 8, labelfontsize = 9, titlefontsize = 10)
 
 # горизонтальная линия α = 1
 hline!(pA, [1.0], color = :black, lw = 1, ls = :dash, label = "α = 1")
@@ -148,7 +148,7 @@ pB = plot(x_B_fit, ŷ_B,
           legend = :none,
           dpi = 300, size = (380, 380),
           framestyle = :box,
-          tickfontsize = 9, labelfontsize = 10, titlefontsize = 11)
+          tickfontsize = 8, labelfontsize = 9, titlefontsize = 10)
 
 hline!(pB, [1.0], color = :black, lw = 1, ls = :dash, label = "")
 
@@ -193,7 +193,7 @@ pC = plot(x_C_fit, ŷ_C,
           legend = :none,
           dpi = 300, size = (380, 380),
           framestyle = :box,
-          tickfontsize = 9, labelfontsize = 10, titlefontsize = 11)
+          tickfontsize = 8, labelfontsize = 9, titlefontsize = 10)
 
 hline!(pC, [1.0], color = :black, lw = 1, ls = :dash, label = "")
 
@@ -219,10 +219,36 @@ annotate!(pC, 3.5, α[10] - 0.025,
 
 annotate!(pC, 0.05, 0.715, text(lbl_C, 8, :left, :gray20))
 
-# ── СБОРКА И СОХРАНЕНИЕ ──────────────────────────────────────────────────────
-fig9 = plot(pA, pB, pC,
-            layout = (1, 3),
-            size   = (1180, 420),
+# ── СБОРКА И СОХРАНЕНИЕ (общая легенда под всеми тремя субграфиками) ─────────
+# пустой подплот под графиками для общей легенды, без рамки и осей
+pL = plot(; legend = false, framestyle = :none, grid = false,
+          xlims = (0.0, 1.0), ylims = (0.0, 1.0), xticks = false, yticks = false,
+          margin = 0Plots.mm)
+
+# нарисуем простую легенду в центре подплота pL (координаты 0..1)
+# рамка вокруг легенды (белый фон + тонкая серая граница)
+xleft, xright = 0.04, 0.96
+ybottom, ytop = 0.04, 0.96
+plot!(pL, [xleft, xright, xright, xleft, xleft], [ybottom, ybottom, ytop, ytop, ybottom],
+    seriestype = :shape, fillcolor = :white, fillalpha = 1.0,
+    linecolor = :gray70, lw = 0.8, label = false)
+
+annotate!(pL, 0.12, 0.55, text("Линейная регрессия", 9, :left, :gray20))
+plot!(pL, [0.05, 0.10], [0.55, 0.55], color = :gray40, lw = 1.5, label = false)
+
+annotate!(pL, 0.38, 0.55, text("α = 1", 9, :left, :gray20))
+plot!(pL, [0.31, 0.36], [0.55, 0.55], color = :black, lw = 1, ls = :dash, label = false)
+
+annotate!(pL, 0.58, 0.55, text("ns", 9, :left, :gray20))
+scatter!(pL, [0.55], [0.55], marker = :circle, ms = 6, color = :white, markerstrokecolor = COLOR_NS, markerstrokewidth = 2, label = false)
+
+annotate!(pL, 0.78, 0.55, text("p < 0.05 (Бонферрони)", 9, :left, :gray20))
+scatter!(pL, [0.75], [0.55], marker = :circle, ms = 6, color = COLOR_SIG, markerstrokecolor = :black, markerstrokewidth = 1, label = false)
+
+layout = @layout([a b c; d{0.12h}])
+fig9 = plot(pA, pB, pC, pL,
+            layout = layout,
+            size   = (1180, 460),
             margin = 8Plots.mm,
             plot_title = "Рисунок 9. Взаимосвязь α_k с характеристиками иммунологического контекста волн",
             plot_titlefontsize = 11)
